@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+import re, os, click
+from python_fakeports import *
+
+from twisted.application.service import MultiService
+from twisted.internet import reactor
+
+from python_fakeports.config import Config
+from python_fakeports.utils import forward_local_port, delete_forward_local_port, SignaturesStore
+
+DEFAULT_CONFIG_FILE_LOCATION = "/etc/fakeports/fakeports.yml"
+DEFAULT_DATABASE_FILENAME = "fakeports.sqlite3"
+NMAP_SIGNATURE_MATCHING = re.compile(r'm\|(?P<sig>.*?)\|.*?p/(?P<prog>.*?)/(.*?v/(?P<version>.*?)/)?')
+
+@click.group()
+def cli(): pass
+
+
+@cli.command()
+@click.option('--config', '-c', default=DEFAULT_CONFIG_FILE_LOCATION, help="Location of config script")
+@click.option('--host', '-h', default=None, help="Server host")
+@click.option('--port', '-p', default=None, help="Server port")
+def run(config,host,port):
+    """Dry run the application"""
+    config = Config.load_config(config)
+    multiservice = MultiService()
+    fakeport_service = PortService(config)
+    fakeport_service.setServiceParent(multiservice)
+
+    port = port or config.connection.get("port")
+    host = host or config.connection.get("host")
+    config.in_commandline(True)
+    reactor.listenTCP(port, FakePortsFactoryTCP(fakeport_service, config), interface=host)
+    reactor.listenUDP(port, FakePortsProtocolUDP(FakePortsFactoryUDP(fakeport_service, config),
+                                                 fakeport_service.get_udp_signatures()), interface=host)
+    reactor.run()
+
+
+@cli.command()
+@click.option('--addrules/--removerules', '-a/-r', default=True, help="Add or remove iptable rules")
+@click.option('--interface', '-i', help="Interface to forward ports from")
+def iptables(addrules, interface):
+    """Add or remove the iptable rules from the config file for forwarding ports to the daemon."""
+    config = Config.load_config("/etc/fakeports/fakeports.yml")
+    f = forward_local_port if addrules else delete_forward_local_port
+
+    if f(interface, config.signatures_tcp.keys(), config.get_port()) is False:
+        print("Error with TCP ports")
+    if f(interface, config.signatures_udp.keys(), config.get_port(), "udp") is False:
+        print("Error with UDP ports")
+
+@cli.command()
+# @click.option('--nmap-service-probes', '-n', help="Location to nmap probes file (nmap-service-probes)")
+@click.argument("nmap_service_probes")
+@click.option('--output', '-o', help="Database output file", default=DEFAULT_DATABASE_FILENAME)
+def parse(nmap_service_probes, output):
+    """Parse the nmap-service-probes file into a database"""
+    if not os.path.isfile(nmap_service_probes):
+        raise IOError("Nmap signatures file not found")
+    db = SignaturesStore(output, True)
+    with open(nmap_service_probes, 'r') as nmap_probes:
+        signatures = NMAP_SIGNATURE_MATCHING.findall(nmap_probes.read())
+        for sig in signatures:
+            if sig[2] is not None and sig[2] != '':
+                version_arg_location = len(re.findall(r"\$\d", sig[2]))
+                # version_arg_location = int(sig[3].lstrip("$"))
+            else:
+                version_arg_location = None
+            try:
+                db.add_signature(sig[0], sig[1], version_arg_location)
+            except:
+                pass
+    db.close()
+
+@cli.command()
+@click.argument('id')
+@click.option('--database', '-d', default=DEFAULT_DATABASE_FILENAME, help="Database file")
+@click.option('--print-signature', '-p', default=False, help="Just print the signature", is_flag=True)
+def info(id, database, print_signature):
+    """Print detailed info about signature by id"""
+    db = SignaturesStore(database)
+    signature = db.get(id)
+    if len(signature) == 0:
+        print("Could not find signature")
+        exit(0)
+    signature = signature[0]
+    if print_signature:
+        print(signature[1])
+    else:
+        print(
+            """Id:\t{id}\nProgram Name:\t{name}\n# of Arguments:\t{args}\nSignature:\t{sig}'""".format(
+                id=signature[0], name=signature[2], args=signature[3] or '0', sig=signature[1])
+        )
+
+@cli.command()
+@click.argument('program_name')
+@click.option('--database', '-d', default=DEFAULT_DATABASE_FILENAME, help="Database file")
+@click.option('--details/--no-details', help="Print signature details (default) or just ID", default=True)
+def find(program_name, database, details):
+    """Find signature by program name"""
+    if not os.path.isfile(database):
+        print("Could not find signatures database, make sure you executed the parse command")
+        exit(1)
+    db = SignaturesStore(database)
+
+    results = db.search(program_name)
+    if len(results) > 0:
+        if details:
+            fmt = "{id:5} {name:65} {args:10}"
+            print(fmt.format(id="Id", name="Program Name", args="# Arguments"))
+            print("---------------------------------------------------------------------------")
+        else:
+            fmt = "{id}"
+        for result in results:
+            print(fmt.format(id=result[0], name=result[2], args=result[3] or '0'))
+    else:
+        if details:
+            print("No records found")
+        else:
+            exit(0)
+
+if __name__ == '__main__':
+    cli()

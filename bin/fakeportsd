@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+PID_DIR="/var/run/fakeports"
+CONFIG_DIR="/etc/fakeports"
+TAC_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+CMD=$1
+
+function start() {
+    if [ ! -f "$CONFIG_DIR/fakeports.yml" ]; then
+        echo "[Error] No configuration file found"
+        exit 1
+    fi
+
+    mkdir -p "$PID_DIR"
+    sudo twistd -y "${TAC_DIR}/fakeports.tac" --pidfile "${PID_DIR}/fakeports.pid" --syslog --prefix=fakeports
+}
+
+function stop() {
+    pid=`sudo cat ${PID_DIR}/fakeports.pid`
+    sudo kill "$pid"
+}
+
+function usage() {
+    echo -e "\n FakePorts\n"
+    echo -e "\tfakeportsd [ start | stop | restart ]\n\n"
+}
+
+if [ "${CMD}" == "start" ]; then
+    start
+elif [ "${CMD}" == "stop" ]; then
+    stop
+elif [ "${CMD}" == "restart" ]; then
+    stop
+    start
+else
+    usage
+    exit 1
+fi

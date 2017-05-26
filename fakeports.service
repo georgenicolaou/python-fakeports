@@ -1,0 +1,15 @@
+[Unit]
+Description=Fakeports
+After=network.target auditd.service
+ConditionPathExists=!/etc/fakeports/fakeports.yml
+
+[Service]
+ExecStart=/usr/local/bin/fakeportsd start
+ExecReload=/usr/local/bin/fakeportsd restart
+KillMode=control-group
+Restart=on-failure
+Type=daemon
+
+[Install]
+WantedBy=multi-user.target
+Alias=fakeports.service
