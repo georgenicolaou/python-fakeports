@@ -44,6 +44,9 @@ def iptables(addrules, interface):
     config = Config.load_config("/etc/fakeports/fakeports.yml")
     f = forward_local_port if addrules else delete_forward_local_port
 
+    if interface is None:
+        interface = config.get_interface()
+
     if f(interface, config.signatures_tcp.keys(), config.get_port()) is False:
         print("Error with TCP ports")
     if f(interface, config.signatures_udp.keys(), config.get_port(), "udp") is False:

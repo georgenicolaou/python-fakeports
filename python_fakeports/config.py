@@ -21,6 +21,10 @@ class Config():
             return self.connection['port']
         return default
 
+    def get_interface(self):
+        if "interface" in self.connection:
+            return self.connection['interface']
+        
     def in_commandline(self, val):
         self.commandline = val
 
