@@ -47,10 +47,12 @@ def iptables(addrules, interface):
     if interface is None:
         interface = config.get_interface()
 
-    if f(interface, config.signatures_tcp.keys(), config.get_port()) is False:
-        print("Error with TCP ports")
-    if f(interface, config.signatures_udp.keys(), config.get_port(), "udp") is False:
-        print("Error with UDP ports")
+    if len(config.signatures_tcp.keys()) > 0:
+        if f(interface, config.signatures_tcp.keys(), config.get_port()) is False:
+            print("Error with TCP ports")
+    if len(config.signatures_udp.keys()) > 0:
+        if f(interface, config.signatures_udp.keys(), config.get_port(), "udp") is False:
+            print("Error with UDP ports")
 
 @cli.command()
 # @click.option('--nmap-service-probes', '-n', help="Location to nmap probes file (nmap-service-probes)")

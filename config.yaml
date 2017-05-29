@@ -152,8 +152,8 @@ signatures_tcp:
 #        type: "simple"
 #        payload: 'HTTP/1.0 400 Bad Request\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n'
 
-signatures_udp:
-  53:
-    type: "regex"
-    payload: '\x07version\x04bind.*[\x03-\x14](\w)'
-    args: ["9.8"]
+#signatures_udp:
+#  53:
+#    type: "regex"
+#    payload: '\x07version\x04bind.*[\x03-\x14](\w)'
+#    args: ["9.8"]

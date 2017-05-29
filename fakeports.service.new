@@ -1,0 +1,13 @@
+[Unit]
+Description=Fakeports
+After=network.target auditd.service
+
+[Service]
+ExecStartPre=/usr/local/bin/fakeportsctl iptables -a
+ExecStart=/usr/local/bin/twistd --nodaemon -y /usr/local/bin/fakeports.tac
+ExecStopPost=/usr/local/bin/fakeportsctl iptables -r
+WorkingDirectory=/usr/local/bin
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

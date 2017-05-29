@@ -1,7 +1,6 @@
 [Unit]
 Description=Fakeports
-After=network.target auditd.service
-ConditionPathExists=!/etc/fakeports/fakeports.yml
+After=network.target auditd.service cloud-final.service
 
 [Service]
 ExecStart=/usr/local/bin/fakeportsd start

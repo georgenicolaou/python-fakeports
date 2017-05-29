@@ -11,7 +11,7 @@ function start() {
         echo "[Error] No configuration file found"
         exit 1
     fi
-
+    sudo /usr/local/bin/fakeportsctl iptables -a
     mkdir -p "$PID_DIR"
     sudo twistd -y "${TAC_DIR}/fakeports.tac" --pidfile "${PID_DIR}/fakeports.pid" --syslog --prefix=fakeports
 }
@@ -19,6 +19,7 @@ function start() {
 function stop() {
     pid=`sudo cat ${PID_DIR}/fakeports.pid`
     sudo kill "$pid"
+    sudo /usr/local/bin/fakeportsctl iptables -r
 }
 
 function usage() {
