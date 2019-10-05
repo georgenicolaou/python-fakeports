@@ -19,7 +19,7 @@ class FakePortsProtocolTCP(protocol.Protocol, FakePortsProtocolBase):
         self.bytes_read = 0
         self.signature = self.signatures.get(self.dst_port, None)
         log.info(LogMessages.CONNECTION.format(src_ip=self.src_addr, dst_port=self.dst_port))
-        if self.signature.send_on_connect:
+        if self.signature and self.signature.send_on_connect:
             self.probe_received()
 
 
