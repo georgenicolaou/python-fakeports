@@ -37,15 +37,15 @@ general:
 #     The type of the argument is irrelevant to the group specified by the \d (digit) or \w (word) arguments
 
 signatures_tcp:
-#  80:
-#      type: 'regex'
-#      payload: '^HTTP/1\.1 400 .*\r\nServer: Microsoft-IIS/(\d)\r\n'
-#      args: ["6.1"]
+  80:
+      type: 'regex'
+      payload: '^HTTP/1\.1 400 .*\r\nServer: Microsoft-IIS/(\d)\r\n'
+      args: ["6.1"]
 
-#  1111:
-#      type: 'simple'
-#      bytes_before_answer: 0
-#      payload: !!binary "//sD//sBDQpQYXNzd29yZDog" #Netgear broadband router Voip telnetd
+  1111:
+      type: 'simple'
+      bytes_before_answer: 0
+      payload: !!binary "//sD//sBDQpQYXNzd29yZDog" #Netgear broadband router Voip telnetd
   81:
       type: 'simple'
       bytes_before_answer: 0
@@ -66,62 +66,62 @@ signatures_tcp:
 #      type: "simple"
 #      payload: "HTTP/1.1 404 Not Found\r\n\
 #                Server: SQLAnywhere/3.1\r\n"
-#  10:
-#      type: "simple"
-#      payload: "* OK 3.5 Cyrus IMAP4 v3.5-Red Hat hacker-version server ready\r\n"
+  10:
+      type: "simple"
+      payload: "* OK 3.5 Cyrus IMAP4 v3.5-Red Hat hacker-version server ready\r\n"
 
-#  21:
-#      type: "simple"
-#      payload: "220 BetaFTPD 9.1 ready.\r\n"
-#  64:
-#      type: "simple"
-#      payload: "* OK Gimap ready for requests from 127.0.0.1 3"
-#  137:
-#      type: 'simple'
-#      payload: "OpenLDAP Finger Service...\r\n"
-#  222:
-#      type: 'simple'
-#      payload: "SSH-2.0-OpenSSH_5.1 Ubuntu-ubuntu1.1\r\n"
+  21:
+      type: "simple"
+      payload: "220 BetaFTPD 9.1 ready.\r\n"
+  64:
+      type: "simple"
+      payload: "* OK Gimap ready for requests from 127.0.0.1 3"
+  137:
+      type: 'simple'
+      payload: "OpenLDAP Finger Service...\r\n"
+  222:
+      type: 'simple'
+      payload: "SSH-2.0-OpenSSH_5.1 Ubuntu-ubuntu1.1\r\n"
 
-#  81:
-#    type: 'match'
-#    regex: '(TRACE|PUT|DELETE|GET|POST) (.*?) HTTP/\d.\d\r\n[0-9].*'
-#    onmatch:
-#      type: 'simple'
-#      payload: "HTTP/1.1 404 Not Found\r\n\
-#                Date: Mon, 27 Mar 2017 13:00:00 GMT\r\n\
-#                Server: Apache/1.3.16 (CentOS)\r\n\
-#                Content-Length: 277\r\n\
-#                Keep-Alive: timeout=5, max=100\r\n\
-#                Connection: Keep-Alive\r\n\
-#                Content-Type: text/html; charset=iso-8859-1\r\n\r\n\
-#                <!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n\
-#                <html><head>\n\
-#                <title>404 Not Found</title>\n\
-#                </head><body>\n\
-#                <h1>Not Found</h1>\n\
-#                <p>The requested URL / was not found on this server.</p>\n\
-#                <hr>\n\
-#                <address>Apache/1.3.16 (CentOS) Server at 192.168.125.110 Port 81</address>\n\
-#                </body></html>"
-#    onfail:
-#      type: "simple"
-#      payload: "HTTP/1.1 400 Bad Request\r\n\
-#                Date: Mon, 27 Mar 2017 13:00:00 GMT\r\n\
-#                Server: Apache/1.3.16 (CentOS)\r\n\
-#                Content-Length: 309\r\n\
-#                Connection: close\r\n\
-#                Content-Type: text/html; charset=iso-8859-1\r\n\r\n\
-#                <!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n\
-#                <html><head>\n\
-#                <title>400 Bad Request</title>\n\
-#                </head><body>\n\
-#                <h1>Bad Request</h1>\n\
-#                <p>Your browser sent a request that this server could not understand.<br />\n\
-#                </p>\n\
-#                <hr>\n\
-#                <address>Apache/1.3.16 (CentOS) Server at 192.168.125.110 Port 81</address>\n\
-#                </body></html>"
+  81:
+    type: 'match'
+    regex: '(TRACE|PUT|DELETE|GET|POST) (.*?) HTTP/\d.\d\r\n[0-9].*'
+    onmatch:
+      type: 'simple'
+      payload: "HTTP/1.1 404 Not Found\r\n\
+                Date: Mon, 27 Mar 2017 13:00:00 GMT\r\n\
+                Server: Apache/1.3.16 (CentOS)\r\n\
+                Content-Length: 277\r\n\
+                Keep-Alive: timeout=5, max=100\r\n\
+                Connection: Keep-Alive\r\n\
+                Content-Type: text/html; charset=iso-8859-1\r\n\r\n\
+                <!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n\
+                <html><head>\n\
+                <title>404 Not Found</title>\n\
+                </head><body>\n\
+                <h1>Not Found</h1>\n\
+                <p>The requested URL / was not found on this server.</p>\n\
+                <hr>\n\
+                <address>Apache/1.3.16 (CentOS) Server at 192.168.125.110 Port 81</address>\n\
+                </body></html>"
+    onfail:
+      type: "simple"
+      payload: "HTTP/1.1 400 Bad Request\r\n\
+                Date: Mon, 27 Mar 2017 13:00:00 GMT\r\n\
+                Server: Apache/1.3.16 (CentOS)\r\n\
+                Content-Length: 309\r\n\
+                Connection: close\r\n\
+                Content-Type: text/html; charset=iso-8859-1\r\n\r\n\
+                <!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n\
+                <html><head>\n\
+                <title>400 Bad Request</title>\n\
+                </head><body>\n\
+                <h1>Bad Request</h1>\n\
+                <p>Your browser sent a request that this server could not understand.<br />\n\
+                </p>\n\
+                <hr>\n\
+                <address>Apache/1.3.16 (CentOS) Server at 192.168.125.110 Port 81</address>\n\
+                </body></html>"
 #  139:
 #      type: "simple"
 #      payload: "HTTP/1.1 404 Not Found\r\n\
@@ -141,16 +141,16 @@ signatures_tcp:
 #      type: 'regex'
 #      payload: '^HTTP/1\.1 400 .*\r\nServer: Microsoft-IIS/(\d)\r\n'
 #      args: [6]
-#  115:
-#      type: "match"
-#      regex: '(TRACE|PUT|DELETE) (.*?) HTTP/\d.\d\r\n[0-9].*'
-#      onmatch:
-#        type: "regex"
-#        payload: '^HTTP/1\.1 400 .*\r\nServer: Microsoft-IIS/(\d)\r\n'
-#        args: ["6.0"]
-#      onfail:
-#        type: "simple"
-#        payload: 'HTTP/1.0 400 Bad Request\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n'
+  115:
+      type: "match"
+      regex: '(TRACE|PUT|DELETE) (.*?) HTTP/\d.\d\r\n[0-9].*'
+      onmatch:
+        type: "regex"
+        payload: '^HTTP/1\.1 400 .*\r\nServer: Microsoft-IIS/(\d)\r\n'
+        args: ["6.0"]
+      onfail:
+        type: "simple"
+        payload: 'HTTP/1.0 400 Bad Request\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n'
 
 #signatures_udp:
 #  53:

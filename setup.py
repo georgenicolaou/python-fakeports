@@ -25,7 +25,7 @@ setup(
         "six==1.10.0",
         "Twisted==17.1.0",
         "zope.interface==4.4.1",
-        "python-iptables==0.11.0"
+        "python-iptables==0.14.0"
     ],
     scripts=['bin/fakeportsctl', 'bin/fakeportsd', 'bin/fakeports.tac'],
     platforms='any'

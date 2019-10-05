@@ -38,7 +38,11 @@ class PortService(Service):
     def load_signatures(self, signatures_dict):
         signatures = {}
         for port, signature in signatures_dict.items():
-            signatures[port] = parse_signature(signature)
+            sig = parse_signature(signature)
+            if sig is None:
+                print("[-] Could not parse signature for port %(port)d" % dict(port))
+            else:
+                signatures[port] = parse_signature(signature)
         return signatures
 
     def get_tcp_signatures(self):
