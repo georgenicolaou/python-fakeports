@@ -35,11 +35,14 @@ class FakePortsProtocolTCP(protocol.Protocol, FakePortsProtocolBase):
                                                        probe=repr(self.data), reply=repr(reply)))
 
     def dataReceived(self, data):
-        self.bytes_read += len(data)
-        self.data += data
-        if self.bytes_read >= self.signature.send_on_bytes_received(self.factory.config):
-            if self.signature.must_sleep():
-                time.sleep(self.signature.get_sleep_time(self.factory.config))
+        if self.signature:
+            self.bytes_read += len(data)
+            self.data += data
+            if self.bytes_read >= self.signature.send_on_bytes_received(self.factory.config):
+                if self.signature.must_sleep():
+                    time.sleep(self.signature.get_sleep_time(self.factory.config))
+                self.probe_received()
+        else:
             self.probe_received()
 
 

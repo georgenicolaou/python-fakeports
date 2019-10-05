@@ -42,7 +42,7 @@ class PortService(Service):
             if sig is None:
                 print("[-] Could not parse signature for port %(port)d" % dict(port))
             else:
-                signatures[port] = parse_signature(signature)
+                signatures[port] = sig
         return signatures
 
     def get_tcp_signatures(self):
