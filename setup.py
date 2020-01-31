@@ -25,7 +25,7 @@ setup(
         "netifaces==0.10.4",
         "packaging==16.8",
         "pyparsing==2.2.0",
-        "PyYAML==3.12",
+        "PyYAML==5.1",
         "six==1.10.0",
         "Twisted==17.1.0",
         "zope.interface==4.4.1",
