@@ -35,7 +35,7 @@ general:
 #     Simplified:         '\x07version\x04bind.*[\x03-\x14](\w)'
 # 3. Under the context of this application \d and \w are replaced by the argument send to the regex type signature.
 #     The type of the argument is irrelevant to the group specified by the \d (digit) or \w (word) arguments
-
+# Sample signatures:
 signatures_tcp:
   80:
       type: 'regex'

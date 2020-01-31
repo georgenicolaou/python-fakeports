@@ -1,5 +1,9 @@
 from setuptools import setup
 
+long_description = 'TODO'
+# with open("README.md", "r") as rfd:
+#     long_description = rfd.read()
+
 setup(
     name='python-fakeports',
     version="0.1",
@@ -9,7 +13,7 @@ setup(
     author='George Nicolaou',
     author_email='george@silensec.com',
     description='Python clone of portspoof',
-    long_description="""TODO""",
+    long_description=long_description,
     install_requires=[
         "appdirs==1.4.3",
         "attrs==17.2.0",
@@ -25,8 +29,17 @@ setup(
         "six==1.10.0",
         "Twisted==17.1.0",
         "zope.interface==4.4.1",
-        "python-iptables==0.14.0"
+        "python-iptables==0.11.0"
     ],
-    scripts=['bin/fakeportsctl', 'bin/fakeportsd', 'bin/fakeports.tac'],
-    platforms='any'
+    data_files=[
+        ('/etc/fakeports/', ['fakeports.yml.sample']),
+        ('/usr/local/bin/', ['bin/fakeports.tac'])
+    ],
+    scripts=['bin/fakeportsctl', 'bin/fakeportsd'],
+    platforms='any',
+    classifiers = [line.strip() for line in '''\
+    Development Status :: 4 - Beta
+    Intended Audience :: System Administrators
+    Operating System :: POSIX :: Linux
+    ''']
 )
