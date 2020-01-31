@@ -27,7 +27,7 @@ setup(
         "pyparsing==2.2.0",
         "PyYAML==3.12",
         "six==1.10.0",
-        "Twisted==17.1.0",
+        "Twisted==19.7.0",
         "zope.interface==4.4.1",
         "python-iptables==0.11.0"
     ],
