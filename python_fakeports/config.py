@@ -1,4 +1,4 @@
-from yaml import load
+import yaml
 
 class Config():
     def __init__(self, connection, general, signatures_tcp, signatures_udp):
@@ -30,7 +30,7 @@ class Config():
 
     @classmethod
     def _load(cls, yaml_contents):
-        yaml_config = load(yaml_contents)
+        yaml_config = yaml.load(yaml_contents, Loader=yaml.SafeLoader)
         if "connection" in yaml_config:
             return Config(yaml_config["connection"], yaml_config.get("general", {}),
                           yaml_config.get("signatures_tcp", {}), yaml_config.get("signatures_udp", {}))
